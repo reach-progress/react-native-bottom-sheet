@@ -12,9 +12,7 @@ import type {
 } from './types';
 
 const AnimatedSectionList =
-  Animated.createAnimatedComponent<ComponentProps<typeof RNSectionList>>(
-    RNSectionList
-  );
+  Animated.createAnimatedComponent(RNSectionList);
 
 const BottomSheetSectionListComponent = createBottomSheetScrollableComponent<
   BottomSheetSectionListMethods,

@@ -23,7 +23,6 @@ export function useBottomSheetScrollableCreator<T = any>({
       return (
         <BottomSheetScrollView
           ref={ref}
-          // @ts-expect-error the wrapped scroll component owns the prop shape.
           {...props}
           focusHook={focusHook}
           scrollEventsHandlersHook={scrollEventsHandlersHook}

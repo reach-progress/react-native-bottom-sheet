@@ -37,8 +37,8 @@ const BottomSheetTextInputComponent = forwardRef<
   const handleOnBlur = useCallback(
     (args: NativeSyntheticEvent<TextInputFocusEventData>) => {
       const keyboardState = animatedKeyboardState.get();
-      const currentFocusedInput = findNodeHandle(
-        RNTextInput.State.currentlyFocusedInput()
+        const currentFocusedInput = findNodeHandle(
+        RNTextInput.State.currentlyFocusedInput() as any
       );
 
       const shouldRemoveCurrentTarget =
