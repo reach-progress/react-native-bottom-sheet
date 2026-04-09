@@ -20,39 +20,27 @@ const BottomSheetTextInputComponent = forwardRef<
   TextInput | undefined,
   BottomSheetTextInputProps
 >(({ onFocus, onBlur, ...rest }, providedRef) => {
-  //#region refs
   const ref = useRef<TextInput>(null);
-  //#endregion
-
-  //#region hooks
   const { animatedKeyboardState, textInputNodesRef } = useBottomSheetInternal();
-  //#endregion
 
-  //#region callbacks
   const handleOnFocus = useCallback(
     (args: NativeSyntheticEvent<TextInputFocusEventData>) => {
       animatedKeyboardState.set(state => ({
         ...state,
         target: args.nativeEvent.target,
       }));
-      if (onFocus) {
-        onFocus(args);
-      }
+      onFocus?.(args);
     },
-    [onFocus, animatedKeyboardState]
+    [animatedKeyboardState, onFocus]
   );
+
   const handleOnBlur = useCallback(
     (args: NativeSyntheticEvent<TextInputFocusEventData>) => {
       const keyboardState = animatedKeyboardState.get();
-      const currentFocusedInput = findNodeHandle(
-        RNTextInput.State.currentlyFocusedInput()
+        const currentFocusedInput = findNodeHandle(
+        RNTextInput.State.currentlyFocusedInput() as any
       );
 
-      /**
-       * we need to make sure that we only remove the target
-       * if the target belong to the current component and
-       * if the currently focused input is not in the targets set.
-       */
       const shouldRemoveCurrentTarget =
         keyboardState.target === args.nativeEvent.target;
       const shouldIgnoreBlurEvent =
@@ -66,50 +54,38 @@ const BottomSheetTextInputComponent = forwardRef<
         }));
       }
 
-      if (onBlur) {
-        onBlur(args);
-      }
+      onBlur?.(args);
     },
-    [onBlur, animatedKeyboardState, textInputNodesRef]
+    [animatedKeyboardState, onBlur, textInputNodesRef]
   );
-  //#endregion
 
-  //#region effects
   useEffect(() => {
     const componentNode = findNodeHandle(ref.current);
     if (!componentNode) {
       return;
     }
 
-    if (!textInputNodesRef.current.has(componentNode)) {
-      textInputNodesRef.current.add(componentNode);
-    }
+    textInputNodesRef.current.add(componentNode);
 
     return () => {
-      const componentNode = findNodeHandle(ref.current);
-      if (!componentNode) {
+      const currentNode = findNodeHandle(ref.current);
+      if (!currentNode) {
         return;
       }
 
       const keyboardState = animatedKeyboardState.get();
-      /**
-       * remove the keyboard state target if it belong
-       * to the current component.
-       */
-      if (keyboardState.target === componentNode) {
+      if (keyboardState.target === currentNode) {
         animatedKeyboardState.set(state => ({
           ...state,
           target: undefined,
         }));
       }
 
-      if (textInputNodesRef.current.has(componentNode)) {
-        textInputNodesRef.current.delete(componentNode);
-      }
+      textInputNodesRef.current.delete(currentNode);
     };
-  }, [textInputNodesRef, animatedKeyboardState]);
+  }, [animatedKeyboardState, textInputNodesRef]);
+
   useImperativeHandle(providedRef, () => ref.current ?? undefined, []);
-  //#endregion
 
   return (
     <TextInput

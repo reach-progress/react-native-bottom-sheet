@@ -17,94 +17,74 @@ function BottomSheetFooterComponent({
   style,
   children,
 }: BottomSheetDefaultFooterProps) {
-  //#region refs
   const ref = useRef<Animated.View>(null);
-  //#endregion
-
-  //#region hooks
   const { animatedLayoutState, animatedKeyboardState } =
     useBottomSheetInternal();
-  //#endregion
 
-  //#region styles
   const containerAnimatedStyle = useAnimatedStyle(() => {
     let footerTranslateY = animatedFooterPosition.get();
 
-    /**
-     * Offset the bottom inset only when keyboard is not shown
-     */
     if (animatedKeyboardState.get().status !== KEYBOARD_STATUS.SHOWN) {
-      footerTranslateY = footerTranslateY - bottomInset;
+      footerTranslateY -= bottomInset;
     }
 
     return {
-      transform: [
-        {
-          translateY: Math.max(0, footerTranslateY),
-        },
-      ],
+      transform: [{ translateY: Math.max(0, footerTranslateY) }],
     };
-  }, [bottomInset, animatedKeyboardState, animatedFooterPosition]);
+  }, [animatedFooterPosition, animatedKeyboardState, bottomInset]);
   const containerStyle = useMemo(
     () => [styles.container, style, containerAnimatedStyle],
-    [style, containerAnimatedStyle]
+    [containerAnimatedStyle, style]
   );
-  //#endregion
 
-  //#region callbacks
+  const updateFooterHeight = useCallback(
+    (
+      height: number,
+      method: 'handleContainerLayout' | 'handleBoundingClientRect'
+    ) => {
+      animatedLayoutState.modify(state => {
+        'worklet';
+        state.footerHeight = height;
+        return state;
+      });
+
+      if (__DEV__) {
+        print({
+          component: 'BottomSheetFooter',
+          method,
+          category: 'layout',
+          params: { height },
+        });
+      }
+    },
+    [animatedLayoutState]
+  );
+
   const handleContainerLayout = useCallback(
     ({
       nativeEvent: {
         layout: { height },
       },
     }: LayoutChangeEvent) => {
-      animatedLayoutState.modify(state => {
-        'worklet';
-        state.footerHeight = height;
-        return state;
-      });
-
-      if (__DEV__) {
-        print({
-          component: 'BottomSheetFooter',
-          method: 'handleContainerLayout',
-          category: 'layout',
-          params: {
-            height,
-          },
-        });
-      }
+      updateFooterHeight(height, 'handleContainerLayout');
     },
-    [animatedLayoutState]
+    [updateFooterHeight]
   );
+
   const handleBoundingClientRect = useCallback(
     ({ height }: BoundingClientRect) => {
-      animatedLayoutState.modify(state => {
-        'worklet';
-        state.footerHeight = height;
-        return state;
-      });
-
-      if (__DEV__) {
-        print({
-          component: 'BottomSheetFooter',
-          method: 'handleBoundingClientRect',
-          category: 'layout',
-          params: {
-            height,
-          },
-        });
-      }
+      updateFooterHeight(height, 'handleBoundingClientRect');
     },
-    [animatedLayoutState]
+    [updateFooterHeight]
   );
-  //#endregion
 
-  //#region effects
   useBoundingClientRect(ref, handleBoundingClientRect);
-  //#endregion
 
-  return children !== null ? (
+  if (children === null) {
+    return null;
+  }
+
+  return (
     <Animated.View
       ref={ref}
       onLayout={handleContainerLayout}
@@ -112,7 +92,7 @@ function BottomSheetFooterComponent({
     >
       {children}
     </Animated.View>
-  ) : null;
+  );
 }
 
 export const BottomSheetFooter = memo(BottomSheetFooterComponent);

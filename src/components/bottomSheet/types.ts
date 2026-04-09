@@ -2,7 +2,7 @@ import type React from 'react';
 import type { Insets, StyleProp, View, ViewStyle } from 'react-native';
 import type { PanGesture } from 'react-native-gesture-handler';
 import type {
-  AnimateStyle,
+  AnimatedStyle,
   ReduceMotion,
   SharedValue,
   WithSpringConfig,
@@ -158,10 +158,11 @@ export interface BottomSheetProps
   /**
    * Defines the keyboard appearance behavior.
    * @enum
+   * - `none`: ignore keyboard-driven sheet repositioning.
    * - `interactive`: offset the sheet by the size of the keyboard.
    * - `extend`: extend the sheet to its maximum snap point.
    * - `fillParent`: extend the sheet to fill parent.
-   * @type `interactive` | `extend` | `fillParent`
+   * @type `none` | `interactive` | `extend` | `fillParent`
    * @default interactive
    */
   keyboardBehavior?: keyof typeof KEYBOARD_BEHAVIOR;
@@ -200,7 +201,7 @@ export interface BottomSheetProps
    * @default undefined
    */
   style?: StyleProp<
-    AnimateStyle<
+    AnimatedStyle<
       Omit<
         ViewStyle,
         | 'flexDirection'

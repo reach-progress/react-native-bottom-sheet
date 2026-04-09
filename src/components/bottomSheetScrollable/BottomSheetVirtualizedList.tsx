@@ -9,9 +9,7 @@ import type {
 } from './types';
 
 const AnimatedVirtualizedList =
-  Animated.createAnimatedComponent<ComponentProps<typeof RNVirtualizedList>>(
-    RNVirtualizedList
-  );
+  Animated.createAnimatedComponent(RNVirtualizedList);
 
 const BottomSheetVirtualizedListComponent =
   createBottomSheetScrollableComponent<

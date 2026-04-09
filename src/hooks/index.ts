@@ -1,7 +1,5 @@
 export { useBottomSheet } from './useBottomSheet';
 export { useBottomSheetInternal } from './useBottomSheetInternal';
-
-// modal
 export { useBottomSheetModal } from './useBottomSheetModal';
 export { useBottomSheetModalInternal } from './useBottomSheetModalInternal';
 
@@ -22,6 +20,9 @@ export { useStableCallback } from './useStableCallback';
 export { usePropsValidator } from './usePropsValidator';
 export { useAnimatedDetents } from './useAnimatedDetents';
 export { useReactiveSharedValue } from './useReactiveSharedValue';
+export { useBottomSheetScrollableCreator } from './useBottomSheetScrollableCreator';
+export { useBottomSheetSpringConfigs } from './useBottomSheetSpringConfigs';
+export { useBottomSheetTimingConfigs } from './useBottomSheetTimingConfigs';
 export {
   useBoundingClientRect,
   type BoundingClientRect,

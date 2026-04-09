@@ -4,15 +4,12 @@ import { INITIAL_LAYOUT_VALUE, KEYBOARD_STATUS } from '../../constants';
 import { useBottomSheetInternal } from '../../hooks';
 import type { BottomSheetFooterContainerProps } from './types';
 
-const BottomSheetFooterContainerComponent = ({
+function BottomSheetFooterContainerComponent({
   footerComponent: FooterComponent,
-}: BottomSheetFooterContainerProps) => {
-  //#region hooks
+}: BottomSheetFooterContainerProps) {
   const { animatedLayoutState, animatedPosition, animatedKeyboardState } =
     useBottomSheetInternal();
-  //#endregion
 
-  //#region variables
   const animatedFooterPosition = useDerivedValue(() => {
     const { handleHeight, footerHeight, containerHeight } =
       animatedLayoutState.get();
@@ -26,16 +23,14 @@ const BottomSheetFooterContainerComponent = ({
 
     let footerTranslateY = Math.max(0, containerHeight - position);
     if (keyboardStatus === KEYBOARD_STATUS.SHOWN) {
-      footerTranslateY = footerTranslateY - keyboardHeight;
+      footerTranslateY -= keyboardHeight;
     }
 
-    footerTranslateY = footerTranslateY - footerHeight - handleHeight;
-    return footerTranslateY;
-  }, [animatedKeyboardState, animatedPosition, animatedLayoutState]);
-  //#endregion
+    return footerTranslateY - footerHeight - handleHeight;
+  }, [animatedKeyboardState, animatedLayoutState, animatedPosition]);
 
   return <FooterComponent animatedFooterPosition={animatedFooterPosition} />;
-};
+}
 
 export const BottomSheetFooterContainer = memo(
   BottomSheetFooterContainerComponent

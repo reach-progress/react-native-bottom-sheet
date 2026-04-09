@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useEffect, useMemo } from 'react';
 import { type LayoutChangeEvent, View } from 'react-native';
 import { SCROLLABLE_TYPE } from '../../constants';
 import {
@@ -17,12 +17,9 @@ function BottomSheetViewComponent({
   children,
   ...rest
 }: BottomSheetViewProps) {
-  //#region hooks
   const { animatedScrollableState, enableDynamicSizing, animatedLayoutState } =
     useBottomSheetInternal();
-  //#endregion
 
-  //#region styles
   const containerStyle = useBottomSheetContentContainerStyle(
     enableFooterMarginAdjustment,
     _providedStyle
@@ -31,9 +28,7 @@ function BottomSheetViewComponent({
     () => [containerStyle, styles.container],
     [containerStyle]
   );
-  //#endregion
 
-  //#region callbacks
   const handleSettingScrollable = useCallback(() => {
     animatedScrollableState.set(state => ({
       ...state,
@@ -41,6 +36,7 @@ function BottomSheetViewComponent({
       type: SCROLLABLE_TYPE.VIEW,
     }));
   }, [animatedScrollableState]);
+
   const handleLayout = useCallback(
     (event: LayoutChangeEvent) => {
       if (enableDynamicSizing) {
@@ -56,30 +52,22 @@ function BottomSheetViewComponent({
         });
       }
 
-      if (onLayout) {
-        onLayout(event);
-      }
+      onLayout?.(event);
 
       if (__DEV__) {
         print({
           component: 'BottomSheetView',
           method: 'handleLayout',
           category: 'layout',
-          params: {
-            height: event.nativeEvent.layout.height,
-          },
+          params: { height: event.nativeEvent.layout.height },
         });
       }
     },
-    [onLayout, animatedLayoutState, enableDynamicSizing]
+    [animatedLayoutState, enableDynamicSizing, onLayout]
   );
-  //#endregion
 
-  //#region effects
   useFocusHook(handleSettingScrollable);
-  //#endregion
 
-  //render
   return (
     <View {...rest} onLayout={handleLayout} style={style}>
       {children}
