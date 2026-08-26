@@ -6,14 +6,11 @@ import {
   useSharedValue,
 } from 'react-native-reanimated';
 import {
-  ANIMATION_STATUS,
-  KEYBOARD_STATUS,
   SCROLLABLE_STATUS,
   SCROLLABLE_TYPE,
   SHEET_STATE,
 } from '../constants';
 import type {
-  AnimationState,
   KeyboardState,
   Scrollable,
   ScrollableRef,
@@ -24,8 +21,7 @@ import { findNodeHandle } from '../utilities';
 export const useScrollable = (
   enableContentPanningGesture: boolean,
   animatedSheetState: SharedValue<SHEET_STATE>,
-  animatedKeyboardState: SharedValue<KeyboardState>,
-  animatedAnimationState: SharedValue<AnimationState>
+  animatedKeyboardState: SharedValue<KeyboardState>
 ) => {
   //#region refs
   const scrollableRef = useRef<ScrollableRef>(null);
@@ -62,14 +58,11 @@ export const useScrollable = (
     }
 
     /**
-     * if keyboard is shown and sheet is animating
-     * then we do not lock the scrolling to not lose
-     * current scrollable scroll position.
+     * Unlock as soon as a bottom sheet input receives focus. Android only
+     * reports the keyboard after it is shown, which is too late for consumers
+     * that scroll alongside the keyboard animation.
      */
-    if (
-      animatedKeyboardState.get().status === KEYBOARD_STATUS.SHOWN &&
-      animatedAnimationState.get().status === ANIMATION_STATUS.RUNNING
-    ) {
+    if (animatedKeyboardState.get().target !== undefined) {
       return SCROLLABLE_STATUS.UNLOCKED;
     }
 
@@ -78,7 +71,6 @@ export const useScrollable = (
     enableContentPanningGesture,
     animatedSheetState,
     animatedKeyboardState,
-    animatedAnimationState,
     state,
   ]);
   //#endregion

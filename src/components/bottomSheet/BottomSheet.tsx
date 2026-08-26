@@ -357,8 +357,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
     } = useScrollable(
       enableContentPanningGesture,
       animatedSheetState,
-      animatedKeyboardState,
-      animatedAnimationState
+      animatedKeyboardState
     );
     // dynamic
     const animatedIndex = useDerivedValue(() => {
