@@ -24,7 +24,7 @@ type BottomSheetContent = {
   style?: AnimatedStyle<ViewStyle>;
 } & Pick<
   BottomSheetProps,
-  'children' | 'detached' | 'keyboardBehavior'
+  'children' | 'detached' | 'keyboardBehavior' | 'enableContentUnderKeyboard'
 > &
   NullableAccessibilityProps &
   ViewProps;
@@ -32,6 +32,7 @@ type BottomSheetContent = {
 function BottomSheetContentComponent({
   detached,
   keyboardBehavior,
+  enableContentUnderKeyboard,
   accessible,
   accessibilityLabel,
   accessibilityHint,
@@ -76,7 +77,10 @@ function BottomSheetContentComponent({
 
     switch (keyboardBehavior) {
       case KEYBOARD_BEHAVIOR.extend:
-        if (keyboardStatus === KEYBOARD_STATUS.SHOWN) {
+        if (
+          keyboardStatus === KEYBOARD_STATUS.SHOWN &&
+          !enableContentUnderKeyboard
+        ) {
           contentHeight = contentHeight - keyboardHeightWithinContainer;
         }
         break;
@@ -131,6 +135,7 @@ function BottomSheetContentComponent({
     animatedSheetHeight,
     isInTemporaryPosition,
     keyboardBehavior,
+    enableContentUnderKeyboard,
   ]);
   const animatedPaddingBottom = useDerivedValue(() => {
     const containerHeight = animatedLayoutState.get().containerHeight;
