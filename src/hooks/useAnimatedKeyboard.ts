@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import {
+  Dimensions,
   Keyboard,
   type KeyboardEvent,
   type KeyboardEventEasing,
@@ -7,11 +8,11 @@ import {
   Platform,
 } from 'react-native';
 import {
+  runOnUI,
   useAnimatedReaction,
   useSharedValue,
 } from 'react-native-reanimated';
-import { scheduleOnUI } from 'react-native-worklets';
-import { KEYBOARD_STATUS, SCREEN_HEIGHT } from '../constants';
+import { KEYBOARD_STATUS } from '../constants';
 import type { KeyboardState } from '../types';
 
 const KEYBOARD_EVENT_MAPPER = {
@@ -106,21 +107,20 @@ export const useAnimatedKeyboard = () => {
 
   //#region effects
   useEffect(() => {
+    const screenHeight = Dimensions.get('screen').height;
     const handleOnKeyboardShow = (event: KeyboardEvent) => {
-      scheduleOnUI(
-        handleKeyboardEvent,
+      runOnUI(handleKeyboardEvent)(
         KEYBOARD_STATUS.SHOWN,
         event.endCoordinates.height,
         event.duration,
         event.easing,
-        SCREEN_HEIGHT -
+        screenHeight -
           event.endCoordinates.height -
           event.endCoordinates.screenY
       );
     };
     const handleOnKeyboardHide = (event: KeyboardEvent) => {
-      scheduleOnUI(
-        handleKeyboardEvent,
+      runOnUI(handleKeyboardEvent)(
         KEYBOARD_STATUS.HIDDEN,
         event.endCoordinates.height,
         event.duration,
