@@ -615,10 +615,6 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           return;
         }
 
-        if (position === animatedPosition.get()) {
-          return;
-        }
-
         // early exit if there is a running animation to
         // the same position
         const { status: animationStatus, nextPosition } =
@@ -628,11 +624,6 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           position === nextPosition
         ) {
           return;
-        }
-
-        // stop animation if it is running
-        if (animationStatus === ANIMATION_STATUS.RUNNING) {
-          stopAnimation();
         }
 
         /**
@@ -670,6 +661,16 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           index = highestDetentPosition ?? DEFAULT_KEYBOARD_INDEX;
         }
 
+        const positionIsUnchanged = position === animatedPosition.get();
+        if (positionIsUnchanged && index === animatedCurrentIndex.get()) {
+          return;
+        }
+
+        // stop animation if it is running
+        if (animationStatus === ANIMATION_STATUS.RUNNING) {
+          stopAnimation();
+        }
+
         /**
          * set the animation state
          */
@@ -683,6 +684,13 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
             nextPosition: position,
           };
         });
+
+        // Content drags can reach a snap point without a settling animation.
+        // Finish the index change through the same path as an animated snap.
+        if (positionIsUnchanged) {
+          animateToPositionCompleted(true);
+          return;
+        }
 
         /**
          * fire `onAnimate` callback
@@ -728,6 +736,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         keyboardBehavior,
         _providedAnimationConfigs,
         _providedOverrideReduceMotion,
+        animatedCurrentIndex,
         animatedDetentsState,
         animatedAnimationState,
         animatedKeyboardState,

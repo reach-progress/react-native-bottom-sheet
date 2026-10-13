@@ -391,6 +391,7 @@ export const useGestureEventsHandlersDefault: GestureEventsHandlersHookType =
          * then no need to perform animation.
          */
         if (destinationPoint === animatedPosition.value) {
+          animateToPosition(destinationPoint, ANIMATION_SOURCE.GESTURE);
           return;
         }
 
@@ -400,6 +401,7 @@ export const useGestureEventsHandlersDefault: GestureEventsHandlersHookType =
          * prevents snapping from top to middle / bottom with repeated interrupted scrolls
          */
         if (wasGestureHandledByScrollView && isSheetAtHighestSnapPoint) {
+          animateToPosition(animatedPosition.value, ANIMATION_SOURCE.GESTURE);
           return;
         }
 
