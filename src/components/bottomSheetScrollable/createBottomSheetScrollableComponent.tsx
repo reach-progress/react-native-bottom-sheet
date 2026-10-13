@@ -3,9 +3,16 @@ import React, {
   useContext,
   useImperativeHandle,
   useMemo,
+  useRef,
 } from 'react';
+import type { LayoutChangeEvent, ViewProps } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
-import { useAnimatedProps } from 'react-native-reanimated';
+import {
+  type SharedValue,
+  useAnimatedProps,
+  useAnimatedReaction,
+} from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import {
   SCROLLABLE_DECELERATION_RATE_MAPPER,
   SCROLLABLE_STATUS,
@@ -15,12 +22,20 @@ import { BottomSheetDraggableContext } from '../../contexts/gesture';
 import {
   useBottomSheetContentContainerStyle,
   useBottomSheetInternal,
-  useScrollHandler,
   useScrollableSetter,
+  useScrollHandler,
   useStableCallback,
 } from '../../hooks';
 import { ScrollableContainer } from './ScrollableContainer';
 import { useBottomSheetContentSizeSetter } from './useBottomSheetContentSizeSetter';
+
+const notifyScrollViewLayout = (
+  onLayout: ViewProps['onLayout'] | SharedValue<ViewProps['onLayout']>,
+  event: LayoutChangeEvent
+) => {
+  const callback = typeof onLayout === 'function' ? onLayout : onLayout?.get();
+  callback?.(event);
+};
 
 export function createBottomSheetScrollableComponent<T, P>(
   type: SCROLLABLE_TYPE,
@@ -44,6 +59,7 @@ export function createBottomSheetScrollableComponent<T, P>(
       progressViewOffset,
       refreshControl,
       // events
+      onLayout,
       onScroll,
       onScrollBeginDrag,
       onScrollEndDrag,
@@ -63,10 +79,12 @@ export function createBottomSheetScrollableComponent<T, P>(
         onScrollEndDrag
       );
     const {
+      animatedIndex,
       animatedScrollableStatus: animatedScrollableState,
       enableContentPanningGesture,
     } = useBottomSheetInternal();
     const { setContentSize } = useBottomSheetContentSizeSetter();
+    const lastLayoutEvent = useRef<LayoutChangeEvent | null>(null);
     //#endregion
 
     if (!draggableGesture && enableContentPanningGesture) {
@@ -98,6 +116,19 @@ export function createBottomSheetScrollableComponent<T, P>(
     //#endregion
 
     //#region callbacks
+    const handleLayout = useStableCallback((event: LayoutChangeEvent) => {
+      event.persist();
+      lastLayoutEvent.current = event;
+      notifyScrollViewLayout(onLayout, event);
+    });
+    const refreshLayout = useStableCallback(() => {
+      // Moving the sheet changes its window position without a native layout event.
+      // Let consumers refresh their measurements when it reaches a snap point.
+      if (lastLayoutEvent.current) {
+        notifyScrollViewLayout(onLayout, lastLayoutEvent.current);
+      }
+    });
+
     const handleContentSizeChange = useStableCallback(
       (contentWidth: number, contentHeight: number) => {
         setContentSize(contentHeight);
@@ -116,6 +147,16 @@ export function createBottomSheetScrollableComponent<T, P>(
     //#endregion
 
     //#region effects
+    useAnimatedReaction(
+      () => animatedIndex.get(),
+      (index, previous) => {
+        if (index !== previous && index >= 0 && Number.isInteger(index)) {
+          scheduleOnRN(refreshLayout);
+        }
+      },
+      [refreshLayout]
+    );
+
     // @ts-ignore
     useImperativeHandle(ref, () => scrollableRef.current);
     useScrollableSetter(
@@ -142,6 +183,7 @@ export function createBottomSheetScrollableComponent<T, P>(
         onRefresh={onRefresh}
         onScroll={scrollHandler}
         onContentSizeChange={handleContentSizeChange}
+        onLayout={handleLayout}
         setContentSize={setContentSize}
         ScrollableComponent={ScrollableComponent}
         refreshControl={refreshControl}
