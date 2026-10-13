@@ -615,6 +615,11 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           return;
         }
 
+        const positionIsUnchanged = position === animatedPosition.get();
+        if (positionIsUnchanged && source !== ANIMATION_SOURCE.GESTURE) {
+          return;
+        }
+
         // early exit if there is a running animation to
         // the same position
         const { status: animationStatus, nextPosition } =
@@ -661,7 +666,6 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           index = highestDetentPosition ?? DEFAULT_KEYBOARD_INDEX;
         }
 
-        const positionIsUnchanged = position === animatedPosition.get();
         if (positionIsUnchanged && index === animatedCurrentIndex.get()) {
           return;
         }
