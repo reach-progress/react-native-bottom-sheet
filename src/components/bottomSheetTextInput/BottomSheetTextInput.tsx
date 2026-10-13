@@ -44,8 +44,11 @@ const BottomSheetTextInputComponent = forwardRef<
   const handleOnBlur = useCallback(
     (args: NativeSyntheticEvent<TextInputFocusEventData>) => {
       const keyboardState = animatedKeyboardState.get();
+      const focusedInput = RNTextInput.State.currentlyFocusedInput();
+      // The native renderer accepts this host instance, but RN 0.86's legacy
+      // findNodeHandle declaration still only lists React components.
       const currentFocusedInput = findNodeHandle(
-        RNTextInput.State.currentlyFocusedInput()
+        focusedInput as unknown as React.Component
       );
 
       /**
