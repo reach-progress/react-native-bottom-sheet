@@ -165,6 +165,15 @@ export interface BottomSheetProps
    */
   keyboardBehavior?: keyof typeof KEYBOARD_BEHAVIOR;
   /**
+   * Keep the sheet content rendered behind the keyboard when using the
+   * `extend` keyboard behavior. This allows translucent keyboards to show the
+   * actual sheet content while a keyboard-aware scroll view keeps the focused
+   * input visible.
+   *
+   * @default false
+   */
+  enableContentUnderKeyboard?: boolean;
+  /**
    * Defines the keyboard blur behavior.
    * - `none`: do nothing.
    * - `restore`: restore sheet position.

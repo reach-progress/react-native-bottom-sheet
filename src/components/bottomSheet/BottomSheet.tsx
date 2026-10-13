@@ -122,6 +122,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
 
       // keyboard
       keyboardBehavior = DEFAULT_KEYBOARD_BEHAVIOR,
+      enableContentUnderKeyboard = false,
       keyboardBlurBehavior = DEFAULT_KEYBOARD_BLUR_BEHAVIOR,
       android_keyboardInputMode = DEFAULT_KEYBOARD_INPUT_MODE,
       enableBlurKeyboardOnGesture = DEFAULT_ENABLE_BLUR_KEYBOARD_ON_GESTURE,
@@ -357,8 +358,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
     } = useScrollable(
       enableContentPanningGesture,
       animatedSheetState,
-      animatedKeyboardState,
-      animatedAnimationState
+      animatedKeyboardState
     );
     // dynamic
     const animatedIndex = useDerivedValue(() => {
@@ -1874,6 +1874,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
                   accessibilityRole={_providedAccessibilityRole ?? undefined}
                   accessibilityLabel={_providedAccessibilityLabel ?? undefined}
                   keyboardBehavior={keyboardBehavior}
+                  enableContentUnderKeyboard={enableContentUnderKeyboard}
                   detached={detached}
                 >
                   {children}
