@@ -615,7 +615,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           return;
         }
 
-        if (position === animatedPosition.get()) {
+        const positionIsUnchanged = position === animatedPosition.get();
+        if (positionIsUnchanged && source !== ANIMATION_SOURCE.GESTURE) {
           return;
         }
 
@@ -628,11 +629,6 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           position === nextPosition
         ) {
           return;
-        }
-
-        // stop animation if it is running
-        if (animationStatus === ANIMATION_STATUS.RUNNING) {
-          stopAnimation();
         }
 
         /**
@@ -670,6 +666,15 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           index = highestDetentPosition ?? DEFAULT_KEYBOARD_INDEX;
         }
 
+        if (positionIsUnchanged && index === animatedCurrentIndex.get()) {
+          return;
+        }
+
+        // stop animation if it is running
+        if (animationStatus === ANIMATION_STATUS.RUNNING) {
+          stopAnimation();
+        }
+
         /**
          * set the animation state
          */
@@ -683,6 +688,13 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
             nextPosition: position,
           };
         });
+
+        // Content drags can reach a snap point without a settling animation.
+        // Finish the index change through the same path as an animated snap.
+        if (positionIsUnchanged) {
+          animateToPositionCompleted(true);
+          return;
+        }
 
         /**
          * fire `onAnimate` callback
@@ -728,6 +740,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         keyboardBehavior,
         _providedAnimationConfigs,
         _providedOverrideReduceMotion,
+        animatedCurrentIndex,
         animatedDetentsState,
         animatedAnimationState,
         animatedKeyboardState,
