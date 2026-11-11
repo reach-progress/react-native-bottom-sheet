@@ -1,3 +1,4 @@
+import { webOnlyDependencies } from '../../utilities/webOnlyDependencies';
 import React, { memo, useMemo } from 'react';
 import type { ViewProps, ViewStyle } from 'react-native';
 import { State } from 'react-native-gesture-handler';
@@ -129,14 +130,14 @@ function BottomSheetContentComponent({
      * @link (https://github.com/gorhom/react-native-bottom-sheet/issues/470)
      */
     return Math.max(contentHeight, 0);
-  }, [
+  }, webOnlyDependencies([
     animatedLayoutState,
     animatedKeyboardState,
     animatedSheetHeight,
     isInTemporaryPosition,
     keyboardBehavior,
     enableContentUnderKeyboard,
-  ]);
+  ]));
   const animatedPaddingBottom = useDerivedValue(() => {
     const containerHeight = animatedLayoutState.get().containerHeight;
     /**
@@ -179,14 +180,14 @@ function BottomSheetContentComponent({
     }
 
     return paddingBottom;
-  }, [
+  }, webOnlyDependencies([
     keyboardBehavior,
     overDragResistanceFactor,
     animatedPosition,
     animatedLayoutState,
     animatedDetentsState,
     animatedKeyboardState,
-  ]);
+  ]));
   const lastStableContentValues = useSharedValue({
     height: 0,
     paddingBottom: 0,
@@ -337,7 +338,7 @@ function BottomSheetContentComponent({
         paddingBottom: targetPaddingBottom,
       };
     },
-    [
+    webOnlyDependencies([
       detached,
       animatedPaddingBottom,
       animatedContentHeightMax,
@@ -347,7 +348,7 @@ function BottomSheetContentComponent({
       animatedDetentsState,
       animatedLayoutState,
       animatedPosition,
-    ]
+    ])
   );
   //#endregion
 
@@ -373,7 +374,7 @@ function BottomSheetContentComponent({
       paddingBottom: displayPaddingBottom.value,
       height: displayContentHeight.value,
     };
-  }, [enableDynamicSizing, detached, animatedLayoutState]);
+  }, webOnlyDependencies([enableDynamicSizing, detached, animatedLayoutState]));
   const contentContainerStyle = useMemo(
     () => [
       detached

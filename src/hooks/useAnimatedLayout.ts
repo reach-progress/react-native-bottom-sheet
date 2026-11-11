@@ -1,3 +1,4 @@
+import { webOnlyDependencies } from '../utilities/webOnlyDependencies';
 import { useMemo, useState } from 'react';
 import {
   type SharedValue,
@@ -83,7 +84,7 @@ export function useAnimatedLayout(
         return _state;
       });
     },
-    [state, verticalInset, modal]
+    webOnlyDependencies([state, verticalInset, modal])
   );
   useAnimatedReaction(
     () => containerLayoutState?.get().height,
@@ -101,7 +102,7 @@ export function useAnimatedLayout(
         return _state;
       });
     },
-    [state, verticalInset, modal]
+    webOnlyDependencies([state, verticalInset, modal])
   );
   //#endregion
 

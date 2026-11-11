@@ -1,3 +1,4 @@
+import { webOnlyDependencies } from '../utilities/webOnlyDependencies';
 import { type SharedValue, useDerivedValue } from 'react-native-reanimated';
 import type { BottomSheetProps } from '../components/bottomSheet';
 import { INITIAL_LAYOUT_VALUE } from '../constants';
@@ -106,7 +107,7 @@ export const useAnimatedDetents = (
       highestDetentPosition,
       closedDetentPosition,
     };
-  }, [
+  }, webOnlyDependencies([
     detents,
     layoutState,
     enableDynamicSizing,
@@ -114,6 +115,6 @@ export const useAnimatedDetents = (
     detached,
     $modal,
     bottomInset,
-  ]);
+  ]));
   return state;
 };

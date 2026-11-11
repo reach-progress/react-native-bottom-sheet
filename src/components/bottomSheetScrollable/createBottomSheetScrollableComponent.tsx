@@ -1,3 +1,4 @@
+import { webOnlyDependencies } from '../../utilities/webOnlyDependencies';
 import React, {
   forwardRef,
   useContext,
@@ -100,7 +101,7 @@ export function createBottomSheetScrollableComponent<T, P>(
           ? animatedScrollableState.get() === SCROLLABLE_STATUS.UNLOCKED
           : showsVerticalScrollIndicator,
       }),
-      [animatedScrollableState, showsVerticalScrollIndicator]
+      webOnlyDependencies([animatedScrollableState, showsVerticalScrollIndicator])
     );
 
     const scrollableGesture = useMemo(
@@ -154,7 +155,7 @@ export function createBottomSheetScrollableComponent<T, P>(
           scheduleOnRN(refreshLayout);
         }
       },
-      [refreshLayout]
+      webOnlyDependencies([refreshLayout])
     );
 
     // @ts-ignore

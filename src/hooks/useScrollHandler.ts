@@ -1,3 +1,4 @@
+import { webOnlyDependencies } from '../utilities/webOnlyDependencies';
 import {
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -56,7 +57,7 @@ export const useScrollHandler = (
       onMomentumBegin: handleOnMomentumBegin,
       onMomentumEnd: handleOnMomentumEnd,
     },
-    [
+    webOnlyDependencies([
       handleOnScroll,
       handleOnBeginDrag,
       handleOnEndDrag,
@@ -65,7 +66,7 @@ export const useScrollHandler = (
       onScroll,
       onScrollBeginDrag,
       onScrollEndDrag,
-    ]
+    ])
   );
 
   return { scrollHandler, scrollableRef, scrollableContentOffsetY };

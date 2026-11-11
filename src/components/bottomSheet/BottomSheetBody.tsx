@@ -1,3 +1,4 @@
+import { webOnlyDependencies } from '../../utilities/webOnlyDependencies';
 import React, { memo, useMemo } from 'react';
 import { Platform } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
@@ -25,7 +26,7 @@ function BottomSheetBodyComponent({ style, children }: BottomSheetBodyProps) {
         },
       ],
     }),
-    [animatedPosition, animatedIndex]
+    webOnlyDependencies([animatedPosition, animatedIndex])
   );
   const containerStyle = useMemo(
     () => [style, styles.container, containerAnimatedStyle],

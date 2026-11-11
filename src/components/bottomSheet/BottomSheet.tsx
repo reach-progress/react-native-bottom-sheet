@@ -1,3 +1,4 @@
+import { webOnlyDependencies } from '../../utilities/webOnlyDependencies';
 /* eslint-disable react-hooks/immutability */
 import invariant from "invariant";
 import React, {
@@ -209,7 +210,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       }
 
       return containerHeight - highestDetentPosition;
-    }, [animatedLayoutState, animatedDetentsState]);
+    }, webOnlyDependencies([animatedLayoutState, animatedDetentsState]));
     const animatedCurrentIndex = useReactiveSharedValue(
       animateOnMount ? -1 : _providedIndex
     );
@@ -256,7 +257,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         isHandleHeightCalculated &&
         isSnapPointsNormalized
       );
-    }, [animatedLayoutState, animatedDetentsState, handleComponent]);
+    }, webOnlyDependencies([animatedLayoutState, animatedDetentsState, handleComponent]));
     const isInTemporaryPosition = useSharedValue(false);
     const animatedContainerHeightDidChange = useSharedValue(false);
 
@@ -341,7 +342,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       }
 
       return SHEET_STATE.OPENED;
-    }, [
+    }, webOnlyDependencies([
       animatedLayoutState,
       animatedDetentsState,
       animatedKeyboardState,
@@ -349,7 +350,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       animatedSheetHeight,
       isInTemporaryPosition,
       keyboardBehavior,
-    ]);
+    ]));
     const {
       state: animatedScrollableState,
       status: animatedScrollableStatus,
@@ -422,7 +423,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       }
 
       return currentIndex;
-    }, [
+    }, webOnlyDependencies([
       android_keyboardInputMode,
       animatedAnimationState,
       animatedLayoutState,
@@ -431,7 +432,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       animatedDetentsState,
       isInTemporaryPosition,
       isLayoutCalculated,
-    ]);
+    ]));
     //#endregion
 
     //#region private methods
@@ -1610,11 +1611,11 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           animateToPosition(closedDetentPosition, ANIMATION_SOURCE.GESTURE);
         }
       },
-      [
+      webOnlyDependencies([
         animatedContainerHeightDidChange,
         animatedAnimationState,
         animatedDetentsState,
-      ]
+      ])
     );
 
     /**
@@ -1657,7 +1658,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
 
         evaluatePosition(ANIMATION_SOURCE.SNAP_POINT_CHANGE);
       },
-      [isLayoutCalculated, isAnimatedOnMount, animatedDetentsState]
+      webOnlyDependencies([isLayoutCalculated, isAnimatedOnMount, animatedDetentsState])
     );
 
     /**
@@ -1782,7 +1783,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         const animationConfigs = getKeyboardAnimationConfigs(easing, duration);
         evaluatePosition(ANIMATION_SOURCE.KEYBOARD, animationConfigs);
       },
-      [
+      webOnlyDependencies([
         $modal,
         bottomInset,
         keyboardBehavior,
@@ -1792,7 +1793,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         animatedLayoutState,
         isInTemporaryPosition,
         getEvaluatedPosition,
-      ]
+      ])
     );
 
     /**
@@ -1805,7 +1806,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           _providedAnimatedPosition.value = _animatedPosition + topInset;
         }
       },
-      [_providedAnimatedPosition, topInset]
+      webOnlyDependencies([_providedAnimatedPosition, topInset])
     );
 
     /**
@@ -1818,7 +1819,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           _providedAnimatedIndex.value = _animatedIndex;
         }
       },
-      [_providedAnimatedIndex]
+      webOnlyDependencies([_providedAnimatedIndex])
     );
     useAnimatedReaction(
       () => isAnimatedOnMount.value,
@@ -1827,7 +1828,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           scheduleOnRN(setIsAnimatedOnMountJs, result);
         }
       },
-      [isAnimatedOnMount]
+      webOnlyDependencies([isAnimatedOnMount])
     );
 
     /**

@@ -1,3 +1,4 @@
+import { webOnlyDependencies } from '../utilities/webOnlyDependencies';
 import { useCallback, useEffect, useRef } from 'react';
 import {
   Dimensions,
@@ -168,7 +169,7 @@ export const useAnimatedKeyboard = () => {
         cachedState.easing
       );
     },
-    [temporaryCachedState, handleKeyboardEvent]
+    webOnlyDependencies([temporaryCachedState, handleKeyboardEvent])
   );
   //#endregion
 

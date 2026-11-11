@@ -1,3 +1,4 @@
+import { webOnlyDependencies } from '../utilities/webOnlyDependencies';
 import { useMemo, useState } from 'react';
 import {
   Platform,
@@ -81,7 +82,7 @@ export function useBottomSheetContentContainerStyle(
         }
       }
     },
-    [animatedLayoutState, enableFooterMarginAdjustment]
+    webOnlyDependencies([animatedLayoutState, enableFooterMarginAdjustment])
   );
   //#endregion
   return style;

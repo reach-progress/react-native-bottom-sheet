@@ -1,3 +1,4 @@
+import { webOnlyDependencies } from '../utilities/webOnlyDependencies';
 import { type RefObject, useCallback, useRef } from 'react';
 import type { NodeHandle } from 'react-native';
 import {
@@ -67,12 +68,12 @@ export const useScrollable = (
     }
 
     return SCROLLABLE_STATUS.LOCKED;
-  }, [
+  }, webOnlyDependencies([
     enableContentPanningGesture,
     animatedSheetState,
     animatedKeyboardState,
     state,
-  ]);
+  ]));
   //#endregion
 
   //#region callbacks
