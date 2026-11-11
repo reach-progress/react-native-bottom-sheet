@@ -5,14 +5,14 @@ import React, {
   useRef,
 } from 'react';
 import type { LayoutChangeEvent, ViewProps } from 'react-native';
-import type { SimultaneousGesture } from 'react-native-gesture-handler';
+import type { LegacySimultaneousGesture } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { INITIAL_LAYOUT_VALUE } from '../../constants';
 import { useBottomSheetInternal } from '../../hooks';
 import { BottomSheetDraggableScrollable } from './BottomSheetDraggableScrollable';
 
 interface ScrollableContainerProps {
-  nativeGesture: SimultaneousGesture;
+  nativeGesture: LegacySimultaneousGesture;
   setContentSize: (contentHeight: number) => void;
   // biome-ignore lint/suspicious/noExplicitAny: 🤷‍♂️
   ScrollableComponent: any;

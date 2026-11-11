@@ -11,7 +11,7 @@ import type {
   TextInputFocusEventData,
 } from 'react-native';
 import { TextInput as RNTextInput } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { LegacyTextInput as TextInput } from 'react-native-gesture-handler';
 import { useBottomSheetInternal } from '../../hooks';
 import { findNodeHandle } from '../../utilities';
 import type { BottomSheetTextInputProps } from './types';

@@ -1,6 +1,6 @@
 import type React from 'react';
 import type { Insets, StyleProp, View, ViewStyle } from 'react-native';
-import type { PanGesture } from 'react-native-gesture-handler';
+import type { LegacyPanGesture } from 'react-native-gesture-handler';
 import type {
   AnimatedStyle,
   ReduceMotion,
@@ -346,14 +346,14 @@ export type AnimateToPositionType = (
 ) => void;
 
 export type BottomSheetGestureProps = {
-  activeOffsetX: Parameters<PanGesture['activeOffsetX']>[0];
-  activeOffsetY: Parameters<PanGesture['activeOffsetY']>[0];
+  activeOffsetX: Parameters<LegacyPanGesture['activeOffsetX']>[0];
+  activeOffsetY: Parameters<LegacyPanGesture['activeOffsetY']>[0];
 
-  failOffsetY: Parameters<PanGesture['failOffsetY']>[0];
-  failOffsetX: Parameters<PanGesture['failOffsetX']>[0];
+  failOffsetY: Parameters<LegacyPanGesture['failOffsetY']>[0];
+  failOffsetX: Parameters<LegacyPanGesture['failOffsetX']>[0];
 
   simultaneousHandlers: Parameters<
-    PanGesture['simultaneousWithExternalGesture']
+    LegacyPanGesture['simultaneousWithExternalGesture']
   >[0];
-  waitFor: Parameters<PanGesture['requireExternalGestureToFail']>[0];
+  waitFor: Parameters<LegacyPanGesture['requireExternalGestureToFail']>[0];
 };
